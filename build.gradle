@@ -1,0 +1,43 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.0.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+group = 'pro.guoyi'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-json' //提供对JSON的读写支持。
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    compile('com.qiniu:qiniu-java-sdk:7.2.27') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+    compile 'commons-fileupload:commons-fileupload:1.4'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.code.findbugs:annotations:3.0.1'
+
+    compile 'com.squareup.okhttp3:okhttp:3.12.6'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
