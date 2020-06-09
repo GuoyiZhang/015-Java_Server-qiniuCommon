@@ -77,7 +77,7 @@ public class QiniuController {
     @RequestMapping(value = "/qiniuRefresh")
     @CrossOrigin(origins = "*", maxAge = 3600)
     @ResponseBody
-    public Result<Object> qiniuRefresh(@RequestBody RefreshUrlRequest refreshUrlRequest) {
+    public Result<Object> qiniuRefresh(@RequestBody RefreshUrlRequest refreshUrlRequest) throws Exception {
         return qiniuUtil.refreshUrl(refreshUrlRequest.getLinkList());
     }
 

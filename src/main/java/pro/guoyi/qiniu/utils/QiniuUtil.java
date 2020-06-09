@@ -2,12 +2,14 @@ package pro.guoyi.qiniu.utils;
 
 import com.google.gson.Gson;
 import com.qiniu.common.QiniuException;
+import com.qiniu.http.Client;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.Map;
 
 import static pro.guoyi.qiniu.utils.response.ResponseCode.STATUS_ERROR;
 import static pro.guoyi.qiniu.utils.response.ResponseCode.STATUS_SUCCESS;
@@ -191,8 +194,39 @@ public class QiniuUtil {
 
     }
 
-    public Result<Object> refreshUrl(String[] urlList) {
-//        RestClientUtils.postJson()
-        return null;
+    public Result<Object> refreshUrl(String[] urlList) throws Exception {
+        Result<Object> result = Result.wrapSuccessfulResult();
+        //要上传的空间
+        Auth auth = Auth.create(accessKey, secretKey);
+        // 构造post请求body
+        Gson gson = new Gson();
+        Map<String, String[]> m = new HashMap();
+        m.put("urls", urlList);
+        String paraR = gson.toJson(m);
+        byte[] bodyByte = paraR.getBytes();
+        // 获取签名
+        String url = "http://fusion.qiniuapi.com/v2/tune/refresh";
+        String accessToken = (String) auth.authorizationV2(url, "POST", bodyByte, "application/json")
+                .get("Authorization");
+        Client client = new Client();
+        StringMap headers = new StringMap();
+        headers.put("Authorization", accessToken);
+        try {
+            com.qiniu.http.Response resp = client.post(url, bodyByte, headers, Client.JsonMime);
+            if (resp.statusCode == 200) {
+                result.setCode(STATUS_SUCCESS);
+                result.setSuccess(true);
+                result.setMessage("刷新提交成功，请等待");
+                result.setData(m);
+            } else {
+                result.setCode(STATUS_ERROR);
+                result.setSuccess(false);
+                result.setMessage("刷新提交失败，请重试");
+                result.setData(m);
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        return result;
     }
 }
