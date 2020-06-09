@@ -1,14 +1,8 @@
 /**
- * Bestpay.com.cn Inc.
- * Copyright (c) 2011-2020 All Rights Reserved.
+ * upload.guoyi.pro Inc.
+ * Copyright (c) 2019-2020 All Rights Reserved.
  */
 package pro.guoyi.qiniu.config;
-
-/**
- * @author guoyi
- * @version Id: CORSConfiguration.java, v 0.1 2020/6/8 2:18 下午 guoyi Exp $$
- */
-
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +10,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * @author guoyi
+ * @version Id: CORSConfiguration.java, v 0.1 2020/6/8 2:18 下午 guoyi Exp $$
+ */
 @Configuration
 public class CORSConfiguration {
 
